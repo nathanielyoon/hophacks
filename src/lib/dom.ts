@@ -1,8 +1,15 @@
+import { Errer } from "./error.ts";
+
 type Tag = keyof HTMLElementTagNameMap;
+class MissingElementError extends Errer<{ tag: string; parent: HTMLElement }> {}
 export const $: {
   <A extends Tag>(tag: A, parent?: HTMLElement): HTMLElementTagNameMap[A];
   <A extends HTMLElement>(tag: string, parent?: HTMLElement): A;
-} = (tag: string, parent = document.body) => parent.querySelector(tag)!;
+} = (tag: string, parent = document.body) => {
+  const a = parent.querySelector(tag);
+  if (!a) throw new MissingElementError({ tag, parent }); // never returns null
+  return a;
+};
 export const add = <A extends Tag>(
   tag: A,
   parent = document.body,
