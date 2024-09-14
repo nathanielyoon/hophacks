@@ -3,7 +3,8 @@
   "packages": {
     "specifiers": {
       "npm:vite": "npm:vite@5.4.5",
-      "npm:vite@^5.3.4": "npm:vite@5.4.5"
+      "npm:vite@^5.3.4": "npm:vite@5.4.5",
+      "npm:vite@^5.4.5": "npm:vite@5.4.5"
     },
     "npm": {
       "@esbuild/aix-ppc64@0.21.5": {
@@ -252,5 +253,12 @@
       }
     }
   },
-  "remote": {}
+  "remote": {},
+  "workspace": {
+    "packageJson": {
+      "dependencies": [
+        "npm:vite@^5.4.5"
+      ]
+    }
+  }
 }

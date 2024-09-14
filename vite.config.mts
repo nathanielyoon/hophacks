@@ -1,4 +1,4 @@
-import { defineConfig } from "npm:vite@^5.3.4";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   esbuild: {
