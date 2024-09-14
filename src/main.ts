@@ -1,21 +1,20 @@
 import { $ } from "./lib/dom.ts";
+import { current } from "./lib/geolocation.ts";
 
 const a = $("code");
 const b = $("div");
 const c = $("button");
-const d: { [_: string]: number }[] = [];
 
 c.addEventListener(
   "click",
   () => {
     b.textContent = "wait";
-    navigator.geolocation.getCurrentPosition(({ coords, timestamp }) => {
-      d.push({
-        timestamp,
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-      });
-      a.textContent = JSON.stringify(d, null, 2);
+    current().then((Z) => {
+      a.textContent = JSON.stringify(
+        { timestamp: Z[0], latitude: Z[1], longitude: Z[2] },
+        null,
+        2,
+      );
       b.textContent = "ok";
     });
   },
