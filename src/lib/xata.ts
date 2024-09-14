@@ -1,23 +1,15 @@
-import { Errer } from "./error.ts";
+import { Errer, UnreachableError } from "./error.ts";
 import { Data, Form, parse } from "./form.ts";
 import { Json, safe } from "./input.ts";
 
-export const POINT = {
-  start: { type: "date" },
-  end: { type: "date" },
-  latitude: { type: "number", step: "any", min: -90, max: 90 },
-  longitude: { type: "number", step: "any", min: -180, max: 180 },
-} satisfies Form;
-export type Point = Data<typeof POINT>;
 class ClientErrorError
   extends Errer<{ status: number; id?: string; message: string }> {}
 class APIKeyError extends Errer<{ api_key: string }> {}
 class UnknownStatusError extends Errer<{ status: number; text: string }> {}
 class ServerErrorError extends Errer<{ status: number }> {}
 class ResponseError extends Errer<{ text: string; why: string }> {}
-const PATHS = { INSERT: "data", SELECT: "query" };
 export class Xata {
-  constructor(private table_url: string, private api_key: string) {}
+  constructor(private api_key: string, private table_url: string) {}
   private async error(response: Response) {
     const status = response.status;
     switch (status) {
@@ -31,10 +23,11 @@ export class Xata {
         throw new UnknownStatusError({ status, text: await response.text() });
     }
   }
-  post(path: "INSERT", body: QueryTable): Promise<void>;
-  post(path: "SELECT", body: InsertRecord): Promise<Point[]>;
-  async post(action: keyof typeof PATHS, body: QueryTable | InsertRecord) {
-    const response = await fetch(`${this.table_url}/${PATHS[action]}`, {
+  post(body: InsertRecord): Promise<void>;
+  post<A extends Form>(body: QueryTable, form: A): Promise<Data<A>[]>;
+  async post(body: QueryTable | InsertRecord, form?: Form) {
+    const url = `${this.table_url}/${form ? "query" : "data"}`;
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         authorization: `Bearer ${this.api_key}`,
@@ -43,6 +36,7 @@ export class Xata {
       body: JSON.stringify(body),
     });
     if (response.status === 200) {
+      if (!form) throw new UnreachableError();
       const text = await response.text();
       const json = safe<{ records: { [_: string]: Json }[] }>(text);
       const type = typeof json;
@@ -51,9 +45,9 @@ export class Xata {
       if (Array.isArray(json)) throw new ResponseError({ text, why: "array" });
       const records = json.records;
       if (!records) throw new ResponseError({ text, why: "no records" });
-      const points = Array<Point>(records.length);
+      const points = Array<Data<Form>>(records.length);
       for (let z = 0; z < records.length; ++z) {
-        points[z] = parse(POINT, records[z]);
+        points[z] = parse(form!, records[z]);
       }
       return points;
     } else if (response.status !== 201) return this.error(response);

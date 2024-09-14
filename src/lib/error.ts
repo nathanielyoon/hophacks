@@ -16,3 +16,9 @@ export abstract class Errer<A = unknown> extends Error {
     };
   }
 }
+export class UnreachableError
+  extends Errer<{ [_: string]: unknown } | undefined> {
+  constructor(cause?: { [_: string]: unknown }) {
+    super(cause);
+  }
+}

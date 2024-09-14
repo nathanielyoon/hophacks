@@ -1,11 +1,19 @@
-export type Position = [timestamp: number, latitude: number, longitude: number];
-export const current = () =>
-  new Promise<Position>((resolve) =>
+export type State = {
+  timestamp: number;
+  lat: number;
+  lon: number;
+  alt: number;
+  check: boolean;
+};
+export const current = (z: number, check: boolean) =>
+  new Promise<State>((resolve) =>
     navigator.geolocation.getCurrentPosition((position) =>
-      resolve([
-        position.timestamp,
-        position.coords.latitude,
-        position.coords.longitude,
-      ])
+      resolve({
+        timestamp: position.timestamp / 1000 >>> 0,
+        lat: position.coords.latitude,
+        lon: position.coords.longitude,
+        alt: z,
+        check,
+      })
     )
   );

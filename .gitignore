@@ -3,3 +3,4 @@ dist/
 functions/
 .wrangler/
 .vite/
+.env
