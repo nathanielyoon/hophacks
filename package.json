@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "hophacks",
+  "devDependencies": {
+    "vite": "^5.4.5"
+  },
+  "scripts": {
+    "build": "vite build"
+  }
+}
