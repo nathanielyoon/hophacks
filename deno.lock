@@ -2,9 +2,22 @@
   "version": "3",
   "packages": {
     "specifiers": {
+      "jsr:@std/assert@^1.0.0": "jsr:@std/assert@1.0.1",
+      "jsr:@std/internal@^1.0.1": "jsr:@std/internal@1.0.1",
       "npm:vite": "npm:vite@5.4.5",
       "npm:vite@^5.3.4": "npm:vite@5.4.5",
       "npm:vite@^5.4.5": "npm:vite@5.4.5"
+    },
+    "jsr": {
+      "@std/assert@1.0.1": {
+        "integrity": "13590ef8e5854f59e4ad252fd987e83239a1bf1f16cb9c69c1d123ebb807a75b",
+        "dependencies": [
+          "jsr:@std/internal@^1.0.1"
+        ]
+      },
+      "@std/internal@1.0.1": {
+        "integrity": "6f8c7544d06a11dd256c8d6ba54b11ed870aac6c5aeafff499892662c57673e6"
+      }
     },
     "npm": {
       "@esbuild/aix-ppc64@0.21.5": {
