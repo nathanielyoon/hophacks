@@ -1,5 +1,5 @@
 import { parse } from "../src/lib/form.ts";
-import { Context, DELETE, error, POST, STATE } from "../src/lib/xata2.ts";
+import { Context, DELETE, error, POST, STATE } from "../src/lib/xata.ts";
 
 export const onRequestPost = (context: Context) =>
   context.request.text()
