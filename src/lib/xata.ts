@@ -49,8 +49,8 @@ export const SPOT = {
   alt,
 } satisfies Form;
 export type Spot = Data<typeof SPOT>;
-const xata = (env: Env, url: string, body: Json) =>
-  fetch(url, {
+const xata = (env: Env, path: string, body: Json) =>
+  fetch(`${env.XATA_URL}/${path}`, {
     method: "POST",
     headers: {
       authorization: `Bearer ${env.XATA_KEY}`,
@@ -70,23 +70,15 @@ export const GET = (env: Env, body: Spot[]) => {
       },
     };
   }
-  return xata(
-    env,
-    "https://nyoon-mmr3jm.us-east-1.xata.sh/db/hophacks:main/tables/state",
-    {
-      columns: ["timestamp"],
-      filter: { $any: columns },
-    },
-  );
+  return xata(env, "tables/state/data", {
+    columns: ["timestamp"],
+    filter: { $any: columns },
+  });
 };
 export const POST = (env: Env, body: State) =>
-  xata(
-    env,
-    "https://nyoon-mmr3jm.us-east-1.xata.sh/db/hophacks:main/tables/state",
-    body,
-  );
+  xata(env, "tables/state/data", body);
 export const DELETE = (env: Env, body: { key: string }) =>
-  xata(env, env.XATA_URL + "/sql", {
+  xata(env, "sql", {
     statement: `DELETE FROM state WHERE "key" = '${body.key}'`,
   });
 export const PUT = (env: Env, key: string, value: Spot[]) =>
