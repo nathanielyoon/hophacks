@@ -87,6 +87,4 @@ export const PUT = (env: Env, key: string, value: Spot[]) =>
       contentType: "application/json",
       cacheControl: "no-cache",
     },
-  }).then((ok) =>
-    new Response(ok === null ? ":(" : ":)", { status: ok === null ? 500 : 201 })
-  );
+  }).then((ok) => new Response());
