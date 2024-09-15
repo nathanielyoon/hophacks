@@ -1,4 +1,15 @@
 export abstract class Errer<A = unknown> extends Error {
+  static json(error: unknown) {
+    if (error instanceof Errer) return JSON.stringify(error.toJSON());
+    if (error instanceof Error) {
+      return JSON.stringify({
+        message: `${error}`,
+        stack: error.stack,
+        cause: error.cause,
+      });
+    }
+    throw error;
+  }
   declare cause: A;
   constructor(message: string, cause: A);
   constructor(cause: A);

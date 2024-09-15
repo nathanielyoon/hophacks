@@ -22,6 +22,10 @@ body {
   padding: 1rem;
 }
 
+output {
+  white-space: pre-wrap;
+}
+
 main {
   display: flex;
   flex-direction: column;

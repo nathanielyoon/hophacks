@@ -1,7 +1,11 @@
-import { on } from "../src/functions.ts";
-import { STATE, Xata } from "../src/lib/xata.ts";
+import { parse } from "../src/lib/form.ts";
+import { Context, DELETE, error, POST, STATE } from "../src/lib/xata2.ts";
 
-export const onRequestPost = on(STATE, async (env, body) => {
-  await new Xata(env.XATA_API_KEY, env.XATA_STATE_URL).post(body);
-  return new Response(null, { status: 201 });
-});
+export const onRequestPost = (context: Context) =>
+  context.request.text()
+    .then((text) => POST(context.env, parse(STATE, text)))
+    .catch(error);
+export const onRequestDelete = (context: Context) =>
+  context.request.text()
+    .then((text) => DELETE(context.env, parse(STATE, text)))
+    .catch(error);

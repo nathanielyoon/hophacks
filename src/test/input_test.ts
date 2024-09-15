@@ -145,7 +145,6 @@ const input = <A extends Input["type"], B extends Input & { type: A }>(
       }
     }
   });
-
 input({ boolean }, {
   type: () => [
     ...["1", "0", "true", "false", "yes", "no"].map(
@@ -160,7 +159,7 @@ input({ radio }, {
       (Z, _, Y) => [{ options: [Y[0], ...Y.slice(1)] }, [Z], [Z + Z]],
     ),
 });
-input({ checkbox }, {
+input({ checkbox }, { // 605017359 fails ???????
   type: (Z) => [[
     { options: [`${Z}`[0], ...`${Z}`.slice(1)] },
     [new Set([`${Z}`[0]])],

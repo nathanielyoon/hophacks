@@ -10,7 +10,6 @@ export const SPOT = {
   lat,
   lon,
   alt,
-  range: { type: "number", step: "any", min: 0, max: 16 },
 } satisfies Form;
 export type Spot = Data<typeof SPOT>;
 export const STATE = {

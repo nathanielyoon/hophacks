@@ -1,30 +1,16 @@
-import { on } from "../src/functions.ts";
-import { base58 } from "../src/lib/58.ts";
-import { build } from "../src/lib/compile.ts";
-import { presign } from "../src/lib/s3.ts";
+import { UnreachableError } from "../src/lib/error.ts";
+import { parse } from "../src/lib/form.ts";
+import { safe } from "../src/lib/input.ts";
+import { GET } from "../src/lib/xata2.ts";
+import { Context, error, SPOT, Spot } from "../src/lib/xata2.ts";
 
-export const onRequestPost = on({
-  key: { type: "text", minlength: 45, maxlength: 45, pattern: base58 },
-}, async (env, body) => { // generate a new presigned url and add it directly to the page
-  console.log(env);
-  console.log(body);
-  const key = body.key;
-  const url = presign(env, key);
-  return new Response(JSON.stringify({ url, env, body }));
-  // console.log(url);
-  // const page = compile(key, [{
-  //   label: "label",
-  //   lat: 0,
-  //   lon: 0,
-  //   alt: 0,
-  //   range: 5,
-  // }]);
-  // console.log(page);
-  // const response = await fetch(url, {
-  //   method: "PUT",
-  //   body: page,
-  //   headers: { "cache-control": "no-cache", "content-type": "text/html" },
-  // });
-  // console.log(response, await response.text());
-  // return new Response(response.ok ? ":)" : ":(");
-});
+export const onRequestPost = (context: Context) =>
+  context.request.text().then((text) => {
+    const json = safe(text);
+    if (!Array.isArray(json)) {
+      throw new UnreachableError({ message: "COME ON", text });
+    }
+    const spots = Array<Spot>(json.length);
+    for (let z = 0; z < json.length; ++z) spots[z] = parse(SPOT, json[z]);
+    return GET(context.env, spots);
+  }).catch(error);
