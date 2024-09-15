@@ -80,7 +80,7 @@ export const DELETE = (env: Env, body: { key: string }) =>
   xata(env, "sql", {
     statement: `DELETE FROM state WHERE "key" = '${body.key}'`,
   });
-export const PUT = (env: Env, key: string, value: Spot) =>
+export const PUT = (env: Env, key: string, value: Spot[]) =>
   env.R2.put(key, JSON.stringify(value), {
     onlyIf: { uploadedBefore: new Date(1632844800000) },
     httpMetadata: {
