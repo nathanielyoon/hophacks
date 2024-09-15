@@ -63,11 +63,9 @@ export const GET = (env: Env, body: Spot[]) => {
   for (let z = 0; z < body.length; ++z) {
     const spot = body[z];
     columns[z] = {
-      $all: {
-        lat: { $all: { $le: spot.lat + DISTANCE, $ge: spot.lat - DISTANCE } },
-        lon: { $all: { $le: spot.lon + DISTANCE, $ge: spot.lon - DISTANCE } },
-        alt: spot.alt,
-      },
+      lat: { $all: { $le: spot.lat + DISTANCE, $ge: spot.lat - DISTANCE } },
+      lon: { $all: { $le: spot.lon + DISTANCE, $ge: spot.lon - DISTANCE } },
+      alt: spot.alt,
     };
   }
   return xata(env, "tables/state/data", {
