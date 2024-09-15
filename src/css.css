@@ -1,0 +1,138 @@
+*,
+::before,
+::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+html {
+  cursor: default;
+  line-height: 1.5;
+  word-break: break-all;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Segoe UI, Helvetica Neue, Helvetica, Cantarell, Ubuntu, Roboto, Noto, Arial, sans-serif;
+}
+
+header {
+  margin-bottom: 2rem;
+}
+
+body {
+  padding: 1rem;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 10rem;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+menu {
+  display: flex;
+  gap: .5rem;
+  list-style-type: none;
+}
+
+form,
+label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+svg {
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke: currentColor;
+  fill: none;
+}
+
+a,
+button,
+input,
+label,
+summary,
+select,
+textarea {
+  color: #000;
+  touch-action: manipulation;
+
+  &:focus {
+    outline: #000 solid 2px;
+    outline-offset: 2px;
+  }
+}
+
+button,
+input:not([type=file]),
+textarea {
+  background: #fff;
+  border: 1px solid #000;
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+button,
+input:not([type=file], [type=checkbox], [type=radio]),
+textarea {
+  padding: 0.25em 0.375em;
+}
+
+button,
+input[type=submit] {
+  width: max-content;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+input:is([type=checkbox], [type=radio]) {
+  appearance: none;
+  background: #fff;
+  height: 1rem;
+  width: 1rem;
+  display: grid;
+  place-content: center;
+
+  &:checked::before {
+    content: "";
+    width: 0.625rem;
+    height: 0.625rem;
+    background: #000;
+  }
+}
+
+input[type=radio],
+input[type=radio]:checked::before {
+  border-radius: 50%;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  font-weight: 400;
+  text-align: left;
+  border-bottom: 1px solid;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  appearance: inherit;
+  -moz-appearance: textfield;
+}

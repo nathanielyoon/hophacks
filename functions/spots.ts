@@ -1,6 +1,6 @@
 import { on } from "../src/functions.ts";
 import { base58 } from "../src/lib/58.ts";
-import { compile } from "../src/lib/compile.ts";
+import { build } from "../src/lib/compile.ts";
 import { presign } from "../src/lib/s3.ts";
 
 export const onRequestPost = on({

@@ -18,7 +18,6 @@ export const STATE = {
   lat,
   lon,
   alt,
-  check: { type: "boolean" },
 } satisfies Form;
 export type State = Data<typeof STATE>;
 class ClientErrorError

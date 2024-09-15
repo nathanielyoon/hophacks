@@ -10,6 +10,16 @@ export const $: {
   if (!a) throw new MissingElementError({ tag, parent }); // never returns null
   return a;
 };
+export const $$: {
+  <A extends Tag>(
+    tag: A,
+    parent?: HTMLElement,
+  ): NodeListOf<HTMLElementTagNameMap[A]>;
+  <A extends Tag>(
+    tag: string,
+    parent?: HTMLElement,
+  ): NodeListOf<HTMLElementTagNameMap[A]>;
+} = (tag, parent = document.body) => parent.querySelectorAll(tag);
 export const add = <A extends Tag>(
   tag: A,
   parent: HTMLElement | null = document.body,

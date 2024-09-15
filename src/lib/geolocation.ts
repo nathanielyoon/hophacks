@@ -1,6 +1,6 @@
 import { State } from "./xata.ts";
 
-export const current = (z: number, check: boolean) =>
+export const current = (z: number) =>
   new Promise<State>((resolve) =>
     navigator.geolocation.getCurrentPosition((position) =>
       resolve({
@@ -8,7 +8,6 @@ export const current = (z: number, check: boolean) =>
         lat: position.coords.latitude,
         lon: position.coords.longitude,
         alt: z,
-        check,
       })
     )
   );
