@@ -6,16 +6,20 @@ import { Xata } from "../lib/xata.ts";
 $("button").addEventListener("click", async function (this) {
   this.disabled = true;
   const key = a_s58(crypto.getRandomValues(new Uint8Array(32)));
+  console.log(key);
   const response = await fetch("/spots", {
     method: "POST",
     body: `{"key":"${key}"}`,
   });
+  console.log(response, await response.text());
   if (response.status === 201) {
+    console.log(":)");
     this.replaceWith(add("a", null, {
       href: `https://hophacks.nyoon.io/${key}`,
       textContent: `hophacks.nyoon.io/${key}`,
     }));
   } else {
+    console.log(":(");
     this.replaceWith(
       add("output", null, { textContent: await response.text() }),
     );
