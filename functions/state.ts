@@ -1,4 +1,3 @@
-import "npm:@cloudflare/workers-types";
 import { on } from "../src/functions.ts";
 import { STATE, Xata } from "../src/lib/xata.ts";
 
