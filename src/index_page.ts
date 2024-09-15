@@ -13,7 +13,7 @@ add("button", undefined, { textContent: "GET STARTED" }).addEventListener(
       body: public_key + "[]",
     });
     const text = await response.text();
-    const url = `hophacks.nyoon.io/${secret_key}`;
+    const url = `hophacks.nyoon.io/${a_s58(secret_key)}`;
     if (response.ok) {
       this.replaceWith(
         add("a", null, { href: "https://" + url, textContent: url }),
