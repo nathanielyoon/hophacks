@@ -16,11 +16,5 @@ export const onRequestPost = (context: Context) =>
     .catch(error);
 export const onRequestPut = (context: Context) =>
   context.request.text()
-    .then((text) =>
-      new Response(JSON.stringify({
-        key: text.slice(0, 45),
-        json: text.slice(45),
-      }))
-    );
-// .then((text) => PUT(context.env, text.slice(0, 45), spot(text.slice(45))))
-// .catch(error);
+    .then((text) => PUT(context.env, text.slice(0, 45), spot(text.slice(45))))
+    .catch(error);
