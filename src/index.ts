@@ -5,11 +5,11 @@ const yell = (message: string) => add("h1").textContent = message;
 const url = new URL(location.href);
 const key = url.pathname.slice(1);
 if (base58.test(key) && key.length === 45) {
-  const response = await fetch(`https://spots.nyoon.io/${key}`, {
+  fetch(`https://spots.nyoon.io/${key}`, {
     mode: "cors",
-  });
-  add("output").textContent = await response.text();
-  const text = await response.text();
+  }).then((response) => response.text()).then((text) =>
+    add("output").textContent = text
+  );
 } else if (key) yell(`${key} IS NOT A VALID KEY`);
 else {
   add("button", undefined, { textContent: "get STARTEd" }).addEventListener(
