@@ -49,7 +49,7 @@ const new_form = (
     spots.push(spot);
     states.push(1);
     row(tbody, spot, 1);
-    await fetch("/state", {
+    await fetch("/spots", {
       method: "PUT",
       body: public_key + JSON.stringify(spots),
     });
