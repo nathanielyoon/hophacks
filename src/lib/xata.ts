@@ -2,6 +2,14 @@ import { Errer, UnreachableError } from "./error.ts";
 import { Data, Form, parse } from "./form.ts";
 import { Json, safe } from "./input.ts";
 
+export const STATE = {
+  timestamp: { type: "number", min: 0, max: 0xfffffff },
+  lat: { type: "number", step: "any", min: -90, max: 90 },
+  lon: { type: "number", step: "any", min: -180, max: 180 },
+  alt: { type: "number", min: -0x80, max: 0x7f },
+  check: { type: "boolean" },
+} satisfies Form;
+export type State = Data<typeof STATE>;
 class ClientErrorError
   extends Errer<{ status: number; id?: string; message: string }> {}
 class APIKeyError extends Errer<{ api_key: string }> {}

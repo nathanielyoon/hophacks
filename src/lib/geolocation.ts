@@ -1,10 +1,5 @@
-export type State = {
-  timestamp: number;
-  lat: number;
-  lon: number;
-  alt: number;
-  check: boolean;
-};
+import { State } from "./xata.ts";
+
 export const current = (z: number, check: boolean) =>
   new Promise<State>((resolve) =>
     navigator.geolocation.getCurrentPosition((position) =>

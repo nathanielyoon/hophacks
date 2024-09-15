@@ -22,6 +22,11 @@ svg {
   fill: none;
 }
 
+output {
+  font-family: ui-monospace, Menlo, Consolas, Monaco, Cascadia Mono, Segoe UI Mono, Liberation Mono, Roboto Mono, Lucida Console, monospace;
+  white-space: pre-wrap;
+}
+
 a,
 button,
 input,

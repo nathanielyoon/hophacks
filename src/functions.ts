@@ -1,19 +1,21 @@
-import { parse } from "./lib/form.ts";
+import { Errer, UnreachableError } from "./lib/error.ts";
+import { Data, Form, parse } from "./lib/form.ts";
 
-export type Env = {
-  XATA_API_KEY: string;
-  XATA_SPOTS_URL: string;
-  XATA_STATE_URL: string;
-};
-export type Context<A extends "spots" | "state"> =
-  & Omit<EventContext<Env, A, never>, "request">
-  & { request: Request };
-export const on =
-  <A extends "spots" | "state">(handle: () => {}) =>
-  async (context: Context<A>) => {
-    try {
-      const a = await context.request.text();
-      const b = parse();
-    } catch {
-    }
-  };
+type Context = EventContext<
+  { XATA_API_KEY: string; XATA_SPOTS_URL: string; XATA_STATE_URL: string },
+  string,
+  never
+>;
+export const on = <A extends Form>(
+  form: A,
+  handle: (env: Context["env"], body: Data<A>) => Response | Promise<Response>,
+) =>
+(context: Omit<Context, "request"> & { request: Request }) =>
+  context.request.text().then((text) => handle(context.env, parse(form, text)))
+    .catch((error) =>
+      new Response(JSON.stringify(error.toJSON?.() ?? `${error}`), {
+        status: error instanceof Errer
+          ? error instanceof UnreachableError ? 500 : 400
+          : 500,
+      })
+    );
