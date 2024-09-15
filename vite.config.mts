@@ -7,6 +7,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
+      external: ["npm:@cloudflare/workers-types"],
       input: {
         index: "index.html",
         main: "main.html",
