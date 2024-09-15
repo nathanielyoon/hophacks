@@ -70,14 +70,14 @@ export const GET = (env: Env, body: Spot[]) => {
   }
   return xata(env, "tables/state/query", {
     columns: ["timestamp"],
-    filter: { $any: columns },
-  });
-  //   .then((response) => response.json()).then((json) => {
-  //   const records: { timestamp: number }[] = json.records;
-  //   const states = Array<number>(records.length);
-  //   for (let z = 0; z < records.length; ++z) states[z] = records[z].timestamp;
-  //   return new Response(JSON.stringify(states));
-  // });
+    filter: columns.length ? { $any: columns } : {},
+  })
+    .then((response) => response.json()).then((json) => {
+      const records: { timestamp: number }[] = json.records;
+      const states = Array<number>(records.length);
+      for (let z = 0; z < records.length; ++z) states[z] = records[z].timestamp;
+      return new Response(JSON.stringify(states));
+    });
 };
 export const DELETE = (env: Env, body: { key: string }) =>
   xata(env, "sql", {
