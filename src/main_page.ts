@@ -1,4 +1,4 @@
-import { generate } from "./lib/25519.ts";
+import { generate, sign } from "./lib/25519.ts";
 import { a_s58, s58_a } from "./lib/58.ts";
 import { add } from "./lib/dom.ts";
 import { locate } from "./lib/geolocation.ts";
@@ -50,9 +50,11 @@ const new_form = (
     spots.push(spot);
     states.push(1);
     row(tbody, spot, 1);
+    const json = JSON.stringify(spots);
+    const signature = sign(secret_key, new TextEncoder().encode(json));
     await fetch("/spots", {
       method: "PUT",
-      body: public_key + JSON.stringify(spots),
+      body: public_key + JSON.stringify(spots) + a_s58(signature),
     });
     submit.disabled = false;
   });

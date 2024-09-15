@@ -1,4 +1,5 @@
-import { base58 } from "./58.ts";
+import { verify } from "./25519.ts";
+import { base58, s58_a } from "./58.ts";
 import { Errer, UnreachableError } from "./error.ts";
 import { Data, Form, parse } from "./form.ts";
 import { Input, Json } from "./input.ts";
