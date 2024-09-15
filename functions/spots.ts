@@ -11,7 +11,7 @@ export const onRequestPost = on({
   const response = await fetch(url, {
     method: "PUT",
     body: compile(key, [{ label: "label", lat: 0, lon: 0, alt: 0, range: 5 }]),
-    headers: { "cache-control": "no-cache", "content-type": "text/plain" },
+    headers: { "cache-control": "no-cache", "content-type": "text/html" },
   });
   return new Response(response.ok ? ":)" : ":(");
 });
