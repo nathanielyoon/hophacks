@@ -11,7 +11,6 @@ $("button").addEventListener("click", async function (this) {
     method: "POST",
     body: `{"key":"${key}"}`,
   });
-  console.log(response, await response.text());
   if (response.status === 201) {
     console.log(":)");
     this.replaceWith(add("a", null, {
