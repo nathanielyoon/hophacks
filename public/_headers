@@ -1,0 +1,8 @@
+/static/*
+  content-type: text/plain
+
+/static/spots.js
+  content-type: text/javascript
+
+/static/spots.css
+  content-type: text/css
