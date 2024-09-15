@@ -14,8 +14,8 @@ const row = (tbody: HTMLTableSectionElement, spot: Spot, count: number) => {
 const table = (spots: Spot[], states: number[]) => {
   const table = add("table");
   const thead = add("thead", table);
-  add("th", thead).textContent = "label",
-    add("th", thead).textContent = "people";
+  add("th", thead).textContent = "Label",
+    add("th", thead).textContent = "People";
   const tbody = add("tbody", table);
   for (let z = 0; z < spots.length; ++z) row(tbody, spots[z], states[z]);
   return tbody;
@@ -33,7 +33,7 @@ const new_form = (
   );
   const alt_field = add(
     "input",
-    add("label", form, { textContent: "Altitude" }),
+    add("label", form, { textContent: "Level" }),
     { name: "alt", type: "number", min: "-128", max: "127", required: true },
   );
   const submit = add("input", form, { type: "submit", value: "Add" });
@@ -54,17 +54,31 @@ const new_form = (
     const signature = sign(secret_key, new TextEncoder().encode(json));
     await fetch("/spots", {
       method: "PUT",
-      body: public_key + JSON.stringify(spots) + a_s58(signature),
+      body: public_key + json + a_s58(signature),
     });
     submit.disabled = false;
   });
 };
-fetch(`https://spots.nyoon.io/${public_key}`).then(async (response) => {
-  const spots = await response.json();
-  const response2 = await fetch("/spots", {
-    method: "POST",
-    body: JSON.stringify(spots),
-  });
-  const states = await response2.json();
-  new_form(table(spots, states), spots, states);
+// fetch(`https://spots.nyoon.io/${public_key}`).then(async (response) => {
+//   const spots = await response.json();
+//   const response2 = await fetch("/spots", {
+//     method: "POST",
+//     body: JSON.stringify(spots),
+//   });
+//   const states = await response2.json();
+// });
+const spots = [
+  { label: "my nice spot :)", lat: 96.321321323, lon: -36.09182839012, alt: 1 },
+  { label: "my other spot >:(", lat: 95.889898, lon: -36.676124, alt: 1 },
+];
+const states = [1, 2];
+new_form(table(spots, states), spots, states);
+const div = add("div");
+const one = add("button", div, {
+  textContent: "CHECK IN",
 });
+one.onclick = () => (one.disabled = true, two.disabled = false);
+const two = add("button", div, {
+  textContent: "CHECK OUT",
+});
+two.onclick = () => (two.disabled = true, one.disabled = false);

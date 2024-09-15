@@ -2,6 +2,7 @@ import { generate, sign } from "./lib/25519.ts";
 import { a_s58 } from "./lib/58.ts";
 import { add } from "./lib/dom.ts";
 
+add("h1").textContent = "Crypts";
 add("button", undefined, { textContent: "GET STARTED" }).addEventListener(
   "click",
   async function (this) {

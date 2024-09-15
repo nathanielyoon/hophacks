@@ -19,18 +19,16 @@ export const onRequestPost = (context: Context) =>
     .catch(error);
 export const onRequestPut = (context: Context) => {
   try {
-    const token = detoken(context.request.headers.get("authorization") ?? "");
-    return context.request.text()
-      .then((text) => {
-        const ok = verify(
-          s58_a(text.slice(0, 45)),
-          new TextEncoder().encode(text.slice(45, -90)),
-          s58_a(text.slice(-90)),
-        );
-        if (ok) {
-          return PUT(context.env, text.slice(0, 45), spot(text.slice(45)));
-        } else return new Response(null, { status: 403 });
-      })
+    return context.request.text().then((text) => {
+      const ok = verify(
+        s58_a(text.slice(0, 45)),
+        new TextEncoder().encode(text.slice(45, -90)),
+        s58_a(text.slice(-90)),
+      );
+      if (ok) {
+        return PUT(context.env, text.slice(0, 45), spot(text.slice(45, -90)));
+      } else return new Response(null, { status: 403 });
+    })
       .catch(error);
   } catch {
     return new Response(null, { status: 403 });

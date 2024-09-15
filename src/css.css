@@ -10,6 +10,7 @@
 html {
   cursor: default;
   line-height: 1.5;
+  font-size: 2rem;
   word-break: break-all;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Segoe UI, Helvetica Neue, Helvetica, Cantarell, Ubuntu, Roboto, Noto, Arial, sans-serif;
 }
@@ -19,6 +20,14 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  background: linear-gradient(to left top, #004aad, #cb6ce6);
+  background-attachment: fixed;
+  align-items: center;
+
+  &>div {
+    display: flex;
+    gap: 1rem;
+  }
 }
 
 form {
