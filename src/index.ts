@@ -1,7 +1,7 @@
-import { a_s58, base58 } from "../lib/58.ts";
-import { $, add } from "../lib/dom.ts";
-import { current } from "../lib/geolocation.ts";
-import { Xata } from "../lib/xata.ts";
+import { a_s58, base58 } from "./lib/58.ts";
+import { $, add } from "./lib/dom.ts";
+import { current } from "./lib/geolocation.ts";
+import { Xata } from "./lib/xata.ts";
 
 $("button").addEventListener("click", async function (this) {
   this.disabled = true;
