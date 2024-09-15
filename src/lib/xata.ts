@@ -72,9 +72,19 @@ export const GET = (env: Env, body: Spot[]) => {
     columns: ["timestamp"],
     filter: { $any: columns },
   }).then((response) => response.json()).then((json) => {
+    if (typeof json !== "object" || json === null || Array.isArray(json)) {
+      return new Response("1 :(");
+    }
     const records: { timestamp: number }[] = json.records;
+    if (!records) return new Response("2 :(");
+    if (!Array.isArray(records)) return new Response("3 :(");
     const states = Array<number>(records.length);
-    for (let z = 0; z < records.length; ++z) states[z] = records[z].timestamp;
+    for (let z = 0; z < records.length; ++z) {
+      const record = records[z];
+      if (!("timestamp" in record)) return new Response("4 :(");
+      if (typeof records[z].timestamp !== "number") return new Response("5 :(");
+      states[z] = records[z].timestamp;
+    }
     return new Response(JSON.stringify(states));
   });
 };
