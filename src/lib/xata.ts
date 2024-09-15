@@ -68,7 +68,7 @@ export const GET = (env: Env, body: Spot[]) => {
       alt: spot.alt,
     };
   }
-  return xata(env, "tables/state/data", {
+  return xata(env, "tables/state/query", {
     columns: ["timestamp"],
     filter: { $any: columns },
   });
