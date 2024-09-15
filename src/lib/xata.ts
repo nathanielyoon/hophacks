@@ -1,12 +1,23 @@
 import { Errer, UnreachableError } from "./error.ts";
 import { Data, Form, parse } from "./form.ts";
-import { Json, safe } from "./input.ts";
+import { Input, Json, safe } from "./input.ts";
 
+const lat = { type: "number", step: "any", min: -90, max: 90 } satisfies Input,
+  lon = { type: "number", step: "any", min: -180, max: 180 } satisfies Input,
+  alt = { type: "number", min: -0x80, max: 0x7f } satisfies Input;
+export const SPOT = {
+  label: { type: "text", maxlength: 0x1000 },
+  lat,
+  lon,
+  alt,
+  range: { type: "number", step: "any", min: 0, max: 16 },
+} satisfies Form;
+export type Spot = Data<typeof SPOT>;
 export const STATE = {
   timestamp: { type: "number", min: 0, max: 0xfffffff },
-  lat: { type: "number", step: "any", min: -90, max: 90 },
-  lon: { type: "number", step: "any", min: -180, max: 180 },
-  alt: { type: "number", min: -0x80, max: 0x7f },
+  lat,
+  lon,
+  alt,
   check: { type: "boolean" },
 } satisfies Form;
 export type State = Data<typeof STATE>;
