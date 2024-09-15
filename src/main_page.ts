@@ -61,7 +61,6 @@ fetch(`https://spots.nyoon.io/${public_key}`).then(async (response) => {
     method: "POST",
     body: JSON.stringify(spots),
   });
-  add("output").textContent = await response2.text();
-  // const states = await response2.json();
-  // table(spots, states);
+  const states = await response2.json();
+  table(spots, states);
 });
