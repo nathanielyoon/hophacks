@@ -12,8 +12,8 @@ $("button").addEventListener("click", async function (this) {
   });
   if (response.status === 201) {
     this.replaceWith(add("a", null, {
-      href: `https://spots.hophacks.pages.dev/${key}`,
-      textContent: `spots.hophacks.pages.dev/${key}`,
+      href: `https://hophacks.nyoon.io/${key}`,
+      textContent: `hophacks.nyoon.io/${key}`,
     }));
   } else {
     this.replaceWith(
@@ -29,7 +29,7 @@ $("form").addEventListener("submit", function (this, event) {
   key_or_url.disabled = submit.disabled = true;
   const key = key_or_url.value.slice(-45);
   key.length === 45 && base58.test(key)
-    ? location.href = `https://spots.hophacks.pages.dev/${key}`
+    ? location.href = `https://hophacks.nyoon.io/${key}`
     : (key_or_url.disabled = submit.disabled = false,
       key_or_url.setCustomValidity("WRONG!"));
 }, { once: true });
