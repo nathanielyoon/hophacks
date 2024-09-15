@@ -17,6 +17,7 @@ const table = (spots: Spot[], states: number[]) => {
   add("th", thead).textContent = "?", add("th", thead).textContent = "#";
   const tbody = add("tbody", table);
   for (let z = 0; z < spots.length; ++z) row(tbody, spots[z], states[z]);
+  return tbody;
 };
 const new_form = (
   tbody: HTMLTableSectionElement,
@@ -62,5 +63,6 @@ fetch(`https://spots.nyoon.io/${public_key}`).then(async (response) => {
     body: JSON.stringify(spots),
   });
   const states = await response2.json();
-  table(spots, states);
+
+  new_form(table(spots, states), spots, states);
 });
