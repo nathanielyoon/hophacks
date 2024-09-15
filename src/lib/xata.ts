@@ -1,10 +1,47 @@
+import { base58 } from "./58.ts";
 import { Errer, UnreachableError } from "./error.ts";
 import { Data, Form, parse } from "./form.ts";
-import { Input, Json, safe } from "./input.ts";
+import { Input, Json } from "./input.ts";
 
+const DISTANCE = 2.4e-6;
+export const key = {
+  type: "text",
+  minlength: 45,
+  maxlength: 45,
+  pattern: base58,
+} satisfies Input;
+type Env = {
+  XATA_KEY: string;
+  XATA_URL: string;
+  R2: {
+    put: (key: string, value: string, options: {
+      onlyIf: { uploadedBefore: Date };
+      httpMetadata: {
+        contentType: string;
+        contentDisposition: string;
+        cacheControl: string;
+      };
+    }) => Promise<{} | null>;
+  };
+};
+export type Context = { env: Env; request: Request };
+export const error = (caught: unknown) =>
+  new Response(Errer.json(caught), {
+    status: caught instanceof Errer
+      ? caught instanceof UnreachableError ? 500 : 400
+      : 500,
+  });
 const lat = { type: "number", step: "any", min: -90, max: 90 } satisfies Input,
   lon = { type: "number", step: "any", min: -180, max: 180 } satisfies Input,
   alt = { type: "number", min: -0x80, max: 0x7f } satisfies Input;
+export const STATE = {
+  key,
+  timestamp: { type: "number", min: 0, max: 0xfffffff },
+  lat,
+  lon,
+  alt,
+} satisfies Form;
+export type State = Data<typeof STATE>;
 export const SPOT = {
   label: { type: "text", maxlength: 0x1000 },
   lat,
@@ -12,61 +49,45 @@ export const SPOT = {
   alt,
 } satisfies Form;
 export type Spot = Data<typeof SPOT>;
-export const STATE = {
-  timestamp: { type: "number", min: 0, max: 0xfffffff },
-  lat,
-  lon,
-  alt,
-} satisfies Form;
-export type State = Data<typeof STATE>;
-class ClientErrorError
-  extends Errer<{ status: number; id?: string; message: string }> {}
-class APIKeyError extends Errer<{ api_key: string }> {}
-class UnknownStatusError extends Errer<{ status: number; text: string }> {}
-class ServerErrorError extends Errer<{ status: number }> {}
-class ResponseError extends Errer<{ text: string; why: string }> {}
-export class Xata {
-  constructor(private api_key: string, private table_url: string) {}
-  private async error(response: Response) {
-    const status = response.status;
-    switch (status) {
-      case 401:
-        throw new APIKeyError({ api_key: this.api_key });
-      case 400:
-      case 404:
-        throw new ClientErrorError(await response.json());
-      default:
-        if ((status / 100 | 0) === 5) throw new ServerErrorError({ status });
-        throw new UnknownStatusError({ status, text: await response.text() });
-    }
-  }
-  post(body: InsertRecord): Promise<void>;
-  post<A extends Form>(body: QueryTable, form: A): Promise<Data<A>[]>;
-  async post(body: QueryTable | InsertRecord, form?: Form) {
-    const url = `${this.table_url}/${form ? "query" : "data"}`;
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        authorization: `Bearer ${this.api_key}`,
-        "content-type": "application/json",
+const xata = (env: Env, path: string, body: Json) =>
+  fetch(`${env.XATA_URL}/${path}`, {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${env.XATA_KEY}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+export const GET = (env: Env, body: Spot[]) => {
+  const columns = Array(body.length);
+  for (let z = 0; z < body.length; ++z) {
+    const spot = body[z];
+    columns[z] = {
+      $all: {
+        lat: { $all: { $le: spot.lat + DISTANCE, $ge: spot.lat - DISTANCE } },
+        lon: { $all: { $le: spot.lon + DISTANCE, $ge: spot.lon - DISTANCE } },
+        alt: spot.alt,
       },
-      body: JSON.stringify(body),
-    });
-    if (response.status === 200) {
-      if (!form) throw new UnreachableError();
-      const text = await response.text();
-      const json = safe<{ records: { [_: string]: Json }[] }>(text);
-      const type = typeof json;
-      if (type !== "object") throw new ResponseError({ text, why: type });
-      if (json === null) throw new ResponseError({ text, why: "null" });
-      if (Array.isArray(json)) throw new ResponseError({ text, why: "array" });
-      const records = json.records;
-      if (!records) throw new ResponseError({ text, why: "no records" });
-      const points = Array<Data<Form>>(records.length);
-      for (let z = 0; z < records.length; ++z) {
-        points[z] = parse(form!, records[z]);
-      }
-      return points;
-    } else if (response.status !== 201) return this.error(response);
+    };
   }
-}
+  return xata(env, "tables/state", {
+    columns: ["timestamp"],
+    filter: { $any: columns },
+  });
+};
+export const POST = (env: Env, body: State) => xata(env, "tables/state", body);
+export const DELETE = (env: Env, body: { key: string }) =>
+  xata(env, "sql", {
+    statement: `DELETE FROM state WHERE "key" = '${body.key}'`,
+  });
+export const PUT = (env: Env, key: string, value: Spot[]) =>
+  env.R2.put(key, JSON.stringify(value), {
+    onlyIf: { uploadedBefore: new Date(1632844800000) },
+    httpMetadata: {
+      contentDisposition: "inline",
+      contentType: "application/json",
+      cacheControl: "no-cache",
+    },
+  }).then((ok) =>
+    new Response(ok === null ? ":(" : ":)", { status: ok === null ? 500 : 201 })
+  );

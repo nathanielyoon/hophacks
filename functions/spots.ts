@@ -1,8 +1,7 @@
 import { UnreachableError } from "../src/lib/error.ts";
 import { parse } from "../src/lib/form.ts";
 import { safe } from "../src/lib/input.ts";
-import { GET, PUT } from "../src/lib/xata2.ts";
-import { Context, error, SPOT, Spot } from "../src/lib/xata2.ts";
+import { Context, error, GET, PUT, SPOT, Spot } from "../src/lib/xata.ts";
 
 const spot = (text: string) => {
   const json = safe(text);
