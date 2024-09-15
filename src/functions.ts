@@ -2,7 +2,14 @@ import { Errer, UnreachableError } from "./lib/error.ts";
 import { Data, Form, parse } from "./lib/form.ts";
 
 type Context = EventContext<
-  { XATA_API_KEY: string; XATA_SPOTS_URL: string; XATA_STATE_URL: string },
+  {
+    XATA_API_KEY: string;
+    XATA_SPOTS_URL: string;
+    XATA_STATE_URL: string;
+    S3_HOST: string;
+    S3_ID: string;
+    S3_KEY: string;
+  },
   string,
   never
 >;
