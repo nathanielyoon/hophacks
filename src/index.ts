@@ -18,7 +18,7 @@ if (base58.test(key) && key.length === 45) {
   // const public_key = a_s58(generate(secret_key));
   fetch(`https://spots.nyoon.io/${key}`).then((response) => response.json())
     .then((spots) => {
-      fetch("/state", { method: "POST", body: key + JSON.stringify(spots) })
+      fetch("/spots", { method: "POST", body: JSON.stringify(spots) })
         .then((response2) => response2.json()).then((states) => {
           const table = add("table");
           const thead = add("thead", table);
