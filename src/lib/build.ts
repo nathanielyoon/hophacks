@@ -28,7 +28,6 @@ export const build = (key: string, spots: [Spot, State[]][], state?: State) => {
     spots.map(([spot, state]) =>
       `<tr>
   <td>${spot.label}</td>
-  <td>${spot.range}</td>
   <td>${state.length}</td>
 </tr>`
     )

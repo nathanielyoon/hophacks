@@ -73,12 +73,12 @@ export const GET = (env: Env, body: Spot[]) => {
     filter: { $any: columns },
   });
 };
-export const POST = (env: Env, body: State) =>
-  xata(env, "tables/state/data", body);
 export const DELETE = (env: Env, body: { key: string }) =>
   xata(env, "sql", {
     statement: `DELETE FROM state WHERE "key" = '${body.key}'`,
   });
+export const POST = (env: Env, body: State) =>
+  DELETE(env, body).then(() => xata(env, "tables/state/data", body));
 export const PUT = (env: Env, key: string, value: Spot[]) =>
   env.R2.put(key, JSON.stringify(value), {
     onlyIf: { uploadedBefore: new Date(1632844800000) },

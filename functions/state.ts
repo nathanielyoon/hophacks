@@ -1,5 +1,5 @@
 import { parse } from "../src/lib/form.ts";
-import { Context, DELETE, error, POST, STATE } from "../src/lib/xata.ts";
+import { Context, DELETE, error, key, POST, STATE } from "../src/lib/xata.ts";
 
 export const onRequestPost = (context: Context) =>
   context.request.text()
@@ -7,5 +7,5 @@ export const onRequestPost = (context: Context) =>
     .catch(error);
 export const onRequestDelete = (context: Context) =>
   context.request.text()
-    .then((text) => DELETE(context.env, parse(STATE, text)))
+    .then((text) => DELETE(context.env, parse({ key }, text)))
     .catch(error);
